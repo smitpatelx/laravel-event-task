@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: iphone-dev-db
+    env_file:
+      - ./.env
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=${DB_PORT}
+    ports:
+      - ${DB_PORT}:3306
+    volumes:
+      - ./.pg_data/data:/var/lib/mysql
+    logging:
+      driver: "local"
+      options:
+        max-file: "3"
+        max-size: "2m"
