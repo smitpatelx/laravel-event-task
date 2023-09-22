@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name', 100)->nullable(false);
             $table->foreignId('achievement_type_id')->constrained(
                 table: 'achievement_type',
-                indexName: 'achievement_type_id'
+                indexName: 'achievement_type_id_fk_achievement'
             );
             $table->integer('level')->nullable(false);
             $table->unique(['name', 'level']);
@@ -30,7 +30,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('achievement', function (Blueprint $table) {
-            $table->dropForeign('achievement_type_id');
+            $table->dropForeign('achievement_type_id_fk_achievement');
         });
         Schema::dropIfExists('achievement');
     }
