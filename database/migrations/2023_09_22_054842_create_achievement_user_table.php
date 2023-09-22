@@ -16,11 +16,11 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('achievement_id')->constrained(
                 table: 'achievement',
-                indexName: 'achievement_id'
+                indexName: 'achievement_id_fk_achievement_user'
             );
             $table->foreignId('user_id')->constrained(
                 table: 'users',
-                indexName: 'user_id'
+                indexName: 'user_id_fk_achievement_user'
             );
             $table->unique(['achievement_id', 'user_id']);
         });
@@ -32,8 +32,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('achievement_user', function (Blueprint $table) {
-            $table->dropForeign('achievement_id');
-            $table->dropForeign('user_id');
+            $table->dropForeign('achievement_id_fk_achievement_user');
+            $table->dropForeign('user_id_fk_achievement_user');
         });
         Schema::dropIfExists('achievement_user');
     }
