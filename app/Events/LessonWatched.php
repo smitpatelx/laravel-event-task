@@ -23,5 +23,6 @@ class LessonWatched
     {
         $this->lesson = $lesson;
         $this->user = $user;
+        return $this;
     }
 }
