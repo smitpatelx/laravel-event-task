@@ -22,10 +22,6 @@ class Achievement extends Model
         'updated_at',
     ];
 
-    // protected $casts = [
-    //     'level' => 'integer',
-    // ];
-
     /**
      * Get the user that wrote the comment.
      */
