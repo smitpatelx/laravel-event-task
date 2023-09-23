@@ -18,7 +18,7 @@ class ListenBadgeUnlocked
 
         if ($badge !== NULL) {
             $user = User::find($event->user->id)->first();
-            $user->badge_id = $badge->id;
+            $user->badge()->associate($badge);
             $user->save();
         }
     }
