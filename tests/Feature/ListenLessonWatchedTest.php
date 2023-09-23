@@ -36,7 +36,7 @@ class ListenLessonWatchedTest extends TestCase
     }
 
     /**
-     * A basic test example.
+     * Fire event AchievementUnlocked
      */
     public function test_listen_comment_written(): void
     {

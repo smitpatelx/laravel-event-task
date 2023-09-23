@@ -33,7 +33,7 @@ class ListenBadgeUnlockedTest extends TestCase
     }
 
     /**
-     * A basic test example.
+     * Fire event BadgeUnlocked
      */
     public function test_listen_badge_unlocked(): void
     {

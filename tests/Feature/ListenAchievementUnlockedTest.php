@@ -35,7 +35,7 @@ class ListenAchievementUnlockedTest extends TestCase
     }
 
     /**
-     * A basic test example.
+     * Fire event AchievementUnlocked
      */
     public function test_listen_achievement_unlocked(): void
     {
@@ -47,7 +47,9 @@ class ListenAchievementUnlockedTest extends TestCase
         // Trigger event
         $listener->handle($event);
 
-        Event::assertDispatched(BadgeUnlocked::class);
+        Event::assertDispatched(BadgeUnlocked::class, function ($e) {
+            return $e->user->id === $this->user->id;
+        });
     }
 
     protected function tearDown(): void
