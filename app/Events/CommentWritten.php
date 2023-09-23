@@ -20,5 +20,6 @@ class CommentWritten
     public function __construct(Comment $comment)
     {
         $this->comment = $comment;
+        return $this;
     }
 }
