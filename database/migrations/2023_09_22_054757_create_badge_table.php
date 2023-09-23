@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('badge', function (Blueprint $table) {
-            $table->id();
+            $table->id()->increments('id');
             $table->timestamps();
             $table->string('name', 100)->nullable(false);
             $table->integer('no_of_achievement')->nullable(false);
