@@ -22,6 +22,7 @@ class AchievementUnlocked
     {
         $this->achievement_name = $achievement_name;
         $this->user = $user;
+        return $this;
     }
 
     /**
