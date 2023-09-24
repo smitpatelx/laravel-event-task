@@ -14,22 +14,39 @@ class ListenAchievementUnlocked
     /**
      * Handle the event.
      */
-    public function handle(AchievementUnlocked $event): void
+    public function handle(AchievementUnlocked $event)
     {
         // Store achievement unlocked for user
         $achievement = Achievement::where('name', $event->achievement_name)->first();
         $user = User::find($event->user->id)->first();
-        $user->achievements()->attach($achievement->id);
 
-        // Current badge
-        $current_badge = Badge::where('no_of_achievement', '>=', $user->achievements->count())->first();
-
-        if ($current_badge !== NULL) {
-            // Dispatch event for badge
-            Event::dispatch(new BadgeUnlocked(
-                $current_badge->name,
-                $event->user,
-            ));
+        if ($achievement == NULL || $user == NULL) {
+            return;
         }
+
+        // Check if user already has this achievement
+        if (!$user->achievements()->where('achievement.id', $achievement->id)->exists()) {
+            $user->achievements()->attach($achievement);
+
+            // Current badge
+            $current_badge = Badge::where(
+                'no_of_achievement',
+                '>=',
+                $user->achievements()->count()
+            )->orderBy('no_of_achievement', 'asc')->first();
+
+
+            if (!is_null($current_badge)) {
+                // Dispatch event for badge
+                Event::dispatch(new BadgeUnlocked(
+                    $current_badge->name,
+                    $event->user,
+                ));
+            }
+
+            return $current_badge;
+        }
+
+        return NULL;
     }
 }
