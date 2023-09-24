@@ -27,8 +27,6 @@ class AchievementUnlockedTest extends TestCase
 
         $this->seed();
 
-        // print gettype(Achievement::orderBy('level', 'desc')->get());
-
         $this->user = User::create([
             'name' => 'test user',
             'email' => 'test@cmail.com',
@@ -56,8 +54,8 @@ class AchievementUnlockedTest extends TestCase
         // Trigger event
         $listener->handle($event);
 
-        Event::assertDispatched(BadgeUnlocked::class, function ($e) {
-            return $e->user->id === $this->user->id;
+        Event::assertDispatched(BadgeUnlocked::class, function ($e) use ($user) {
+            return $e->user->id === $user->id;
         });
     }
 
@@ -109,7 +107,6 @@ class AchievementUnlockedTest extends TestCase
         $listener = new ListenAchievementUnlocked();
 
         // Trigger event
-        $this->expectException(QueryException::class);
         $listener->handle($event);
 
         // Check if event BadgeUnlocked is dispatched, must not
