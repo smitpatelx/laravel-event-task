@@ -22,6 +22,7 @@ class AchievementsController extends Controller
         } else {
             $badge = Badge::find($badge);
         }
+        $badge_name = $badge->name;
 
         // Next badge
         $next_badge = Badge::where('no_of_achievement', '>', $badge->no_of_achievement)->first();
@@ -34,7 +35,7 @@ class AchievementsController extends Controller
         return response()->json([
             'unlocked_achievements' => $achievements,
             'next_available_achievements' => $next_achievements,
-            'current_badge' => $badge,
+            'current_badge' => $badge_name,
             'next_badge' => $next_badge_name,
             'remaing_to_unlock_next_badge' => $remaing_to_unlock_next_badge,
         ]);
