@@ -12,6 +12,7 @@ class AchievementsController extends Controller
     {
         // Get all achievements that are unlocked
         $achievements = $user->achievements()->get()->pluck('id')->toArray();
+        $unlocked_achievements = $user->achievements()->get()->pluck('name')->toArray();
         // Get all achievements that are not unlocked
         $next_achievements = Achievement::whereNotIn('id', $achievements)->orderBy('level', 'desc')->get()->pluck('name')->toArray();
 
@@ -27,13 +28,21 @@ class AchievementsController extends Controller
         // Next badge
         $next_badge = Badge::where('no_of_achievement', '>', $badge->no_of_achievement)->first();
         // Next badge name
-        $next_badge_name = $next_badge->name;
+        if ($next_badge == NULL) {
+            $next_badge_name = '';
+        } else {
+            $next_badge_name = $next_badge->name;
+        }
 
         // Remaining to unlock next badge
-        $remaing_to_unlock_next_badge = $next_badge->no_of_achievement - $badge->no_of_achievement;
+        if ($next_badge == NULL) {
+            $remaing_to_unlock_next_badge = 0;
+        } else {
+            $remaing_to_unlock_next_badge = $next_badge->no_of_achievement - $badge->no_of_achievement;
+        }
 
         return response()->json([
-            'unlocked_achievements' => $achievements,
+            'unlocked_achievements' => $unlocked_achievements,
             'next_available_achievements' => $next_achievements,
             'current_badge' => $badge_name,
             'next_badge' => $next_badge_name,
