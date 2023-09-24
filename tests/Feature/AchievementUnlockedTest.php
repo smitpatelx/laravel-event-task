@@ -10,7 +10,6 @@ use App\Events\AchievementUnlocked;
 use App\Events\BadgeUnlocked;
 use App\Listeners\ListenAchievementUnlocked;
 use App\Models\Achievement;
-use Illuminate\Database\QueryException;
 
 class AchievementUnlockedTest extends TestCase
 {
