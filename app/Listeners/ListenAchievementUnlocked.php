@@ -14,14 +14,14 @@ class ListenAchievementUnlocked
     /**
      * Handle the event.
      */
-    public function handle(AchievementUnlocked $event)
+    public function handle(AchievementUnlocked $event): ?Badge
     {
         // Store achievement unlocked for user
         $achievement = Achievement::where('name', $event->achievement_name)->first();
         $user = User::find($event->user->id)->first();
 
         if ($achievement == NULL || $user == NULL) {
-            return;
+            return NULL;
         }
 
         // Check if user already has this achievement
