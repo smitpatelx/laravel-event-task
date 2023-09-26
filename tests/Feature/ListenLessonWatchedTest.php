@@ -9,6 +9,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use App\Events\AchievementUnlocked;
 use App\Events\LessonWatched;
+use App\Models\Achievement;
+use App\Models\AchievementType;
 use App\Models\Lesson;
 
 class ListenLessonWatchedTest extends TestCase
@@ -17,6 +19,11 @@ class ListenLessonWatchedTest extends TestCase
 
     private User $user;
     private Lesson $lesson;
+
+    private function getFirstLessonAchievement() {
+        $achievement_type = AchievementType::where('name', '=', 'lesson')->first();
+        return Achievement::where('achievement_type_id', '=', $achievement_type->id)->orderBy('level', 'asc')->first();
+    }
 
     protected function setUp() :void
     {
@@ -48,7 +55,12 @@ class ListenLessonWatchedTest extends TestCase
         // Trigger event
         $listener->handle($event);
 
-        Event::assertDispatched(AchievementUnlocked::class);
+        $achievement_name_to_check = $this->getFirstLessonAchievement()->name;
+
+        Event::assertDispatched(AchievementUnlocked::class, function ($e) use ($achievement_name_to_check) {
+            return $e->achievement_name === $achievement_name_to_check
+                && $e->user->id === $this->user->id;
+        });
     }
 
     protected function tearDown(): void

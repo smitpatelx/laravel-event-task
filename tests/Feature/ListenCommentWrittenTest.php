@@ -10,6 +10,8 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use App\Events\AchievementUnlocked;
+use App\Models\Achievement;
+use App\Models\AchievementType;
 
 class ListenCommentWrittenTest extends TestCase
 {
@@ -17,6 +19,11 @@ class ListenCommentWrittenTest extends TestCase
 
     private User $user;
     private Comment $comment;
+
+    private function getFirstCommentAchievement() {
+        $achievement_type = AchievementType::where('name', '=', 'comment')->first();
+        return Achievement::where('achievement_type_id', '=', $achievement_type->id)->orderBy('level', 'asc')->first();
+    }
 
     protected function setUp() :void
     {
@@ -49,7 +56,12 @@ class ListenCommentWrittenTest extends TestCase
         // Trigger event
         $listener->handle($event);
 
-        Event::assertDispatched(AchievementUnlocked::class);
+        $achievement_name_to_check = $this->getFirstCommentAchievement()->name;
+
+        Event::assertDispatched(AchievementUnlocked::class, function ($e) use ($achievement_name_to_check) {
+            return $e->achievement_name === $achievement_name_to_check
+                && $e->user->id === $this->user->id;
+        });
     }
 
     protected function tearDown(): void
